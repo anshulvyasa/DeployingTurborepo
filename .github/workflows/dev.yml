@@ -21,4 +21,12 @@ jobs:
 
       - name: SSH into Server and Deploy
         run: |
-          echo "Hello world"
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@<your-server-ip> << 'EOF'
+          cd DeployingTurborepo/
+          git pull
+          pnpm install
+          pnpm run build
+          pm2 restart fe-server
+          pm2 restart http
+          pm2 restart ws
+          EOF
